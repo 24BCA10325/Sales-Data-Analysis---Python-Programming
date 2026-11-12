@@ -1,0 +1,116 @@
+System Code
+
+
+
+sales = [
+    {"date": "2026-10-01", "order": "ORD001", "product": "Laptop", "category": "Electronics", "qty": 2, "price": 55000},
+    {"date": "2026-10-01", "order": "ORD002", "product": "Headphones", "category": "Electronics", "qty": 5, "price": 1800},
+    {"date": "2026-10-02", "order": "ORD003", "product": "Office Chair", "category": "Furniture", "qty": 3, "price": 4200},
+    {"date": "2026-10-02", "order": "ORD004", "product": "Notebook", "category": "Stationery", "qty": 20, "price": 80},
+    {"date": "2026-10-03", "order": "ORD005", "product": "Smartphone", "category": "Electronics", "qty": 2, "price": 22000},
+    {"date": "2026-10-03", "order": "ORD006", "product": "Pen Set", "category": "Stationery", "qty": 15, "price": 150},
+    {"date": "2026-10-04", "order": "ORD007", "product": "Desk", "category": "Furniture", "qty": 2, "price": 7500},
+    {"date": "2026-10-04", "order": "ORD008", "product": "Headphones", "category": "Electronics", "qty": 4, "price": 1800},
+    {"date": "2026-10-05", "order": "ORD009", "product": "Notebook", "category": "Stationery", "qty": 30, "price": 80},
+    {"date": "2026-10-05", "order": "ORD010", "product": "Laptop", "category": "Electronics", "qty": 1, "price": 55000},
+    {"date": "2026-10-06", "order": "ORD011", "product": "Office Chair", "category": "Furniture", "qty": 2, "price": 4200},
+    {"date": "2026-10-06", "order": "ORD012", "product": "Smartphone", "category": "Electronics", "qty": 3, "price": 22000}
+]
+
+def revenue(s):
+    return s["qty"] * s["price"]
+
+def display_records():
+    print("\nALL SALES RECORDS")
+    print("-" * 75)
+    for s in sales:
+        print(s["date"], s["order"], s["product"],
+              s["category"], s["qty"], revenue(s))
+
+def summary():
+    total = sum(revenue(s) for s in sales)
+    units = sum(s["qty"] for s in sales)
+    orders = len(set(s["order"] for s in sales))
+
+    print("\nOVERALL SALES SUMMARY")
+    print("Total records:", len(sales))
+    print("Unique orders:", orders)
+    print("Units sold:", units)
+    print("Total revenue: Rs.", format(total, ",.2f"))
+    print("Average order value: Rs.", format(total/orders, ",.2f"))
+
+def product_analysis():
+    totals = defaultdict(lambda: [0, 0])
+
+    for s in sales:
+        totals[s["product"]][0] += s["qty"]
+        totals[s["product"]][1] += revenue(s)
+
+    print("\nPRODUCT PERFORMANCE")
+    for product, values in sorted(
+        totals.items(), key=lambda x: x[1][1], reverse=True
+    ):
+        print(product, "| Quantity:", values[0],
+              "| Revenue: Rs.", format(values[1], ",.2f"))
+
+    best = max(totals, key=lambda p: totals[p][0])
+    print("Best-selling product:", best)
+
+def category_analysis():
+    totals = defaultdict(float)
+
+    for s in sales:
+        totals[s["category"]] += revenue(s)
+
+    print("\nCATEGORY ANALYSIS")
+    for category, amount in sorted(
+        totals.items(), key=lambda x: x[1], reverse=True
+    ):
+        print(category, ": Rs.", format(amount, ",.2f"))
+
+def daily_revenue():
+    totals = defaultdict(float)
+
+    for s in sales:
+        totals[s["date"]] += revenue(s)
+
+    print("\nDAILY REVENUE")
+    for day, amount in sorted(totals.items()):
+        print(day, ": Rs.", format(amount, ",.2f"))
+
+def search_product():
+    name = input("Enter product name: ").lower()
+    found = [s for s in sales if name in s["product"].lower()]
+
+    if found:
+        for s in found:
+            print(s["product"], "| Quantity:", s["qty"],
+                  "| Revenue:", revenue(s))
+    else:
+        print("No matching product found.")
+
+def generate_report():
+    print("\nSALES ANALYSIS REPORT")
+    print("=" * 35)
+    summary()
+    product_analysis()
+    category_analysis()
+    print("\nReport generation completed.")
+
+def main():
+    while True:
+        print("\n================================")
+        print("   SALES DATA ANALYSIS SYSTEM")
+        print("================================")
+        print("1. View Sales Records")
+        print("2. Overall Sales Summary")
+        print("3. Product Performance")
+        print("4. Category Analysis")
+        print("5. Daily Revenue")
+        print("6. Search Product")
+        print("7. Generate Analysis Report")
+        print("8. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
